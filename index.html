@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Apex – Project Information Form</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Background effects -->
+  <div class="bg-photo" aria-hidden="true"></div>
+  <div class="bg-overlay" aria-hidden="true"></div>
+
+  <!-- Auto-save indicator -->
+  <div id="autoSaveIndicator" class="auto-save-indicator">
+    <span class="spinner" style="display: none;"></span>
+    <span id="autoSaveText">All changes saved</span>
+  </div>
+
+  <!-- App container -->
+  <div id="appContainer" class="container" role="application" aria-label="Project Information Form">
+    <header class="header">
+      <img class="logo-left" src="https://apexbuilds.wpengine.com/wp-content/uploads/Apex-with-icon.svg" alt="Apex logo" />
+      <div class="title-block">
+        <h1>Project Information Form</h1>
+        <p class="subtitle">Complete all sections to submit</p>
+      </div>
+      <div class="top-controls">
+        <button id="btnToggleDark" class="btn btn-ghost" aria-pressed="false" data-tooltip="Toggle dark mode">
+          <span id="darkModeText">🌙 Dark</span>
+        </button>
+        <button id="btnAdmin" class="btn btn-ghost" data-tooltip="Admin panel">⚙️ Admin</button>
+      </div>
+      <div class="progress-bar-outer" aria-hidden="true">
+        <div id="progressBar" class="progress-fill"></div>
+      </div>
+    </header>
+
+    <main class="main">
+      <!-- PAGE 1: Project Information -->
+      <section id="page1" class="page active" aria-labelledby="page1Title">
+        <div class="page-indicator"><strong>Page 1 of 3:</strong> Project Information</div>
+
+        <div class="page-left">
+          <div class="section">
+            <h2 class="section-title" id="page1Title">📋 Project Details</h2>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="generalContractor">General Contractor <span class="required">*</span></label>
+                <select id="generalContractor" name="generalContractor" required>
+                  <option value="">Select General Contractor</option>
+                  <option>Apex Building Group</option>
+                  <option>Apex Building Company</option>
+                  <option>Apex Gilbane Joint Venture</option>
+                  <option>Apex ETC Joint Venture</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="projectName">Project Name <span class="required">*</span></label>
+                <input id="projectName" type="text" placeholder="Enter project name" required />
+                <span class="validation-message">Project name is required</span>
+              </div>
+            </div>
+
+            <div class="form-row single">
+              <div class="form-group">
+                <label for="address">Address</label>
+                <textarea id="address" placeholder="Enter complete project address" rows="3"></textarea>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="owner">Owner</label>
+                <input id="owner" type="text" placeholder="Owner name" />
+              </div>
+              <div class="form-group">
+                <label for="apexOwner">Apex Owner/Developer</label>
+                <select id="apexOwner">
+                  <option value="">Select</option>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="typeStatus">Type / Status</label>
+                <select id="typeStatus">
+                  <option value="">Select status</option>
+                  <option>PreDevelopment</option>
+                  <option>PreConstruction</option>
+                  <option>Construction</option>
+                  <option>Development</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="projectManager">Project Manager</label>
+                <input id="projectManager" type="text" placeholder="Manager name" />
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2 class="section-title">💰 Contract Details</h2>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="contractAmount">Contract Amount</label>
+                <div class="currency-group">
+                  <span class="currency-prefix">$</span>
+                  <input id="contractAmount" type="text" placeholder="0.00" class="currency-input" data-type="currency" />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="addAltAmount">Add/Alt Amount</label>
+                <div class="currency-group">
+                  <span class="currency-prefix">$</span>
+                  <input id="addAltAmount" type="text" placeholder="0.00" class="currency-input" data-type="currency" />
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row single">
+              <div class="form-group">
+                <label for="addAltDetails">Add/Alt Details</label>
+                <textarea id="addAltDetails" placeholder="Describe additions/alternatives" rows="3"></textarea>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="retainage">Retainage</label>
+                <div class="percent-group">
+                  <input id="retainage" type="text" placeholder="0" class="percent-input" data-type="percent" />
+                  <span class="percent-suffix">%</span>
+                </div>
+                <div id="retainageNote" class="note"></div>
+              </div>
+              <div class="form-group">
+                <label for="costFileUpload">Attach Cost File</label>
+                <input id="costFileUpload" type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.csv" />
+                <div id="costFileName" class="note">No file chosen</div>
+                <div id="fileWarning" class="note warning" style="display:none"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="page-right">
+          <div class="section">
+            <h2 class="section-title">📝 Purchase Order Details</h2>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="requestedBy">Requested By</label>
+                <input id="requestedBy" type="text" placeholder="Requestor name" />
+              </div>
+              <div class="form-group">
+                <label for="companyName">Full Company Name <span class="required">*</span></label>
+                <input id="companyName" type="text" placeholder="Company name" required />
+                <span class="validation-message">Company name is required</span>
+              </div>
+            </div>
+
+            <div class="subsection">
+              <h3 class="subsection-title">Contact Information</h3>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="contactName">Name</label>
+                  <input id="contactName" type="text" placeholder="Contact person" />
+                </div>
+                <div class="form-group">
+                  <label for="cellNumber">Cell #</label>
+                  <input id="cellNumber" type="tel" placeholder="+63 912 345 6789" class="phone-input" data-type="phone" />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input id="email" type="email" placeholder="email@example.com" data-type="email" />
+                </div>
+                <div class="form-group">
+                  <label for="officeNumber">Office #</label>
+                  <input id="officeNumber" type="tel" placeholder="+63 2 1234 5678" class="phone-input" data-type="phone" />
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="vendorType">Vendor Type</label>
+                <select id="vendorType">
+                  <option value="">Select type</option>
+                  <option>Sub Contractor</option>
+                  <option>Supplier</option>
+                  <option>Equipment Rental</option>
+                  <option>Labor</option>
+                  <option>General Conditions</option>
+                  <option>Misc</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="workType">Type of Work Performed</label>
+                <select id="workType">
+                  <option value="">Select work type</option>
+                  <option>General Requirements</option>
+                  <option>Demo</option>
+                  <option>Earthwork</option>
+                  <option>Sitework</option>
+                  <option>Concrete</option>
+                  <option>Masonry</option>
+                  <option>Metals</option>
+                  <option>Woods,Plastics & Metals</option>
+                  <option>Thermal & Moisture Protection</option>
+                  <option>Openings (Windows & Doors)</option>
+                  <option>Finishes</option>
+                  <option>Tiling</option>
+                  <option>Specialities</option>
+                  <option>Equipment</option>
+                  <option>FF&E</option>
+                  <option>Stone</option>
+                  <option>Elevator/Conveying Systems</option>
+                  <option>Fire Suppression</option>
+                  <option>Fire Sprinklers</option>
+                  <option>Plumbing</option>
+                  <option>Plumbing Fixtures</option>
+                  <option>HVAC</option>
+                  <option>Electric</option>
+                  <option>Utilities</option>
+                  <option>Other/Misc</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="subsection">
+              <h3 class="subsection-title">Important Dates</h3>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="noticeToProceed">Notice to Proceed</label>
+                  <input id="noticeToProceed" type="date" />
+                </div>
+                <div class="form-group">
+                  <label for="anticipatedStart">Anticipated Start</label>
+                  <input id="anticipatedStart" type="date" />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="substantialCompletion">Substantial Completion</label>
+                  <input id="substantialCompletion" type="date" />
+                </div>
+                <div class="form-group">
+                  <label for="hundredPercent">100% Complete</label>
+                  <input id="hundredPercent" type="date" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="buttons">
+          <button class="btn btn-secondary" disabled>Previous</button>
+          <div style="display: flex; gap: 8px;">
+            <button id="btnClearPage1" class="btn btn-secondary">Clear Page</button>
+            <button id="btnClearAll1" class="btn btn-secondary">Clear All</button>
+            <button id="nextPage1" class="btn btn-primary">Next Page →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAGE 2: Schedule of Values -->
+      <section id="page2" class="page" aria-labelledby="page2Title">
+        <div class="page-indicator"><strong>Page 2 of 3:</strong> Schedule of Values</div>
+
+        <div class="section" style="grid-column: 1 / -1;">
+          <div style="display: flex; gap: 16px; align-items: center;">
+            <div style="flex: 1;">
+              <label for="subcontractor">Subcontractor</label>
+              <input id="subcontractor" type="text" placeholder="Auto-filled from page 1" readonly />
+            </div>
+            <div style="flex: 1;">
+              <label for="sovProjectName">Project Name</label>
+              <input id="sovProjectName" type="text" placeholder="Auto-filled from page 1" readonly />
+            </div>
+            <div style="flex: 1;">
+              <label for="projectLocation">Project Location</label>
+              <input id="projectLocation" type="text" placeholder="Auto-filled from page 1" readonly />
+            </div>
+          </div>
+        </div>
+
+        <div class="section" style="grid-column: 1 / -1;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h2 class="section-title" id="page2Title">📊 Schedule</h2>
+            <button id="addRowPage2" class="btn btn-primary">+ Add Row</button>
+          </div>
+
+          <div style="overflow-x: auto;">
+            <table class="data-table" aria-label="Schedule table">
+              <thead>
+                <tr>
+                  <th style="width: 4%;">#</th>
+                  <th style="width: 20%;">Prime Contract Line</th>
+                  <th style="width: 15%;">Budget Code</th>
+                  <th style="width: 25%;">Description</th>
+                  <th style="width: 8%;">Qty</th>
+                  <th style="width: 10%;">$/Unit</th>
+                  <th style="width: 10%;">Total Cost</th>
+                  <th style="width: 10%;">Scheduled</th>
+                  <th style="width: 10%;">Apex Value</th>
+                  <th style="width: 10%;">Profit/(Loss)</th>
+                  <th style="width: 5%;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="scheduleTableBody">
+                <!-- Rows added dynamically -->
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="6" style="text-align: right;">TOTALS:</td>
+                  <td id="totalCost">$0.00</td>
+                  <td id="totalScheduled">$0.00</td>
+                  <td id="totalApex">$0.00</td>
+                  <td id="totalProfit">$0.00</td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <div class="buttons" style="grid-column: 1 / -1;">
+          <button id="prevFromPage2" class="btn btn-secondary">← Previous</button>
+          <div style="display: flex; gap: 8px;">
+            <button id="btnClearPage2" class="btn btn-secondary">Clear Page</button>
+            <button id="btnClearAll2" class="btn btn-secondary">Clear All</button>
+            <button id="nextFromPage2" class="btn btn-primary">Next Page →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAGE 3: Final Details / Scope of Work -->
+      <section id="page3" class="page" aria-labelledby="page3Title">
+        <div class="page-indicator"><strong>Page 3 of 3:</strong> Final Details</div>
+
+        <div class="page-left">
+          <div class="section">
+            <h2 class="section-title">🏗️ Project Summary</h2>
+            <div class="contractor-grid">
+              <div>Project Name:</div>
+              <input id="page3_projectName_display" readonly />
+              <div>Category:</div>
+              <input id="page3_category_display" readonly />
+              <div>Project Manager:</div>
+              <input id="page3_projectManager_display" readonly />
+            </div>
+          </div>
+        </div>
+
+        <div class="page-right">
+          <div class="section">
+            <h2 class="section-title">👤 Contractor Details</h2>
+            <div class="contractor-grid">
+              <div>Company:</div>
+              <input id="page3_company_display" readonly />
+              <div>Contact:</div>
+              <input id="page3_contact_display" readonly />
+              <div>Email:</div>
+              <input id="page3_email_display" readonly />
+              <div>Cell:</div>
+              <input id="page3_cell_display" readonly />
+              <div>Tel:</div>
+              <input id="page3_tel_display" readonly />
+            </div>
+          </div>
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <div class="section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <h2 class="section-title">📄 Scope of Work</h2>
+              <button id="addRowPage3" class="btn btn-primary">+ Add Line</button>
+            </div>
+
+            <div style="overflow-x: auto;">
+              <table class="data-table" aria-label="Scope table">
+                <thead>
+                  <tr>
+                    <th style="width: 8%;">Item #</th>
+                    <th style="width: 60%;">Description</th>
+                    <th style="width: 12%;">Included</th>
+                    <th style="width: 12%;">Excluded</th>
+                    <th style="width: 8%;">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="page3Body">
+                  <!-- Rows added dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="buttons">
+          <button id="prevFromPage3" class="btn btn-secondary">← Previous</button>
+          <div style="display: flex; gap: 8px;">
+            <button id="btnClearPage3" class="btn btn-secondary">Clear Page</button>
+            <button id="btnClearAll3" class="btn btn-secondary">Clear All</button>
+            <button id="btnSubmitForm" class="btn btn-primary btn-submit">
+              ✓ Submit Form
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Admin Drawer -->
+  <aside id="adminDrawer" class="admin-drawer" aria-hidden="true">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h3>⚙️ Admin Panel</h3>
+      <button id="adminClose" class="btn btn-ghost">✕ Close</button>
+    </div>
+
+    <div style="margin-top: 20px;">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="admin_remote_endpoint">Flow HTTP URL</label>
+          <input id="admin_remote_endpoint" type="text" placeholder="Enter endpoint URL" />
+        </div>
+        <div class="form-group">
+          <label for="admin_api_key">API Key</label>
+          <input id="admin_api_key" type="text" placeholder="Enter API key" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="admin_pin">Admin PIN</label>
+          <input id="admin_pin" type="password" placeholder="Set new PIN (min 4 chars)" />
+        </div>
+        <div style="display: flex; gap: 8px; align-items: flex-end;">
+          <button id="saveAdminBtn" class="btn btn-primary">💾 Save</button>
+          <button id="btnTestPost" class="btn btn-secondary">🧪 Test</button>
+          <button id="btnPushPending" class="btn btn-secondary">📤 Push</button>
+          <button id="btnRefreshAdmin" class="btn btn-secondary">🔄 Refresh</button>
+        </div>
+      </div>
+
+      <div id="adminStatus"></div>
+
+      <div style="margin-top: 20px;">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th style="width: 5%;"><input type="checkbox" id="adminSelectAll" /></th>
+              <th style="width: 10%;">ID</th>
+              <th style="width: 30%;">Project</th>
+              <th style="width: 20%;">Date</th>
+              <th style="width: 10%;">Status</th>
+              <th style="width: 25%;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="adminTableBody">
+            <tr><td colspan="6" style="text-align: center; padding: 20px;">Loading...</td></tr>
+          </tbody>
+        </table>
+
+        <div style="margin-top: 16px; display: flex; gap: 8px;">
+          <button id="btnResendSelected" class="btn btn-primary">📤 Resend Selected</button>
+          <button id="btnDeleteSelected" class="btn btn-secondary">🗑️ Delete Selected</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Admin Modal -->
+  <div id="adminModal" class="admin-modal" style="display: none;">
+    <div class="admin-modal-inner">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3>📄 Submission Details</h3>
+        <button id="adminModalClose" class="btn btn-ghost">✕ Close</button>
+      </div>
+      <div id="adminModalBody"></div>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
