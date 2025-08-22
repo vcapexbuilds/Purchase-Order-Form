@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Icon Button Test</title>
+    <link rel="stylesheet" href="css/form.css">
+    <style>
+        body {
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .test-container {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Icon Button Test</h1>
+    
+    <div class="test-container">
+        <h2>Regular Button</h2>
+        <button type="button" class="btn-danger">Remove</button>
+    </div>
+    
+    <div class="test-container">
+        <h2>Icon Button</h2>
+        <button type="button" class="btn-icon btn-danger" title="Remove">&times;</button>
+    </div>
+    
+    <div class="test-container">
+        <h2>In Table Context</h2>
+        <table class="form-table">
+            <tr>
+                <td>Sample Data</td>
+                <td><button type="button" class="btn-icon btn-danger" title="Remove">&times;</button></td>
+            </tr>
+        </table>
+    </div>
+    
+    <div class="test-container">
+        <h2>Schedule Table Test</h2>
+        <table id="scheduleTable" class="form-table">
+            <thead>
+                <tr>
+                    <th>Prime Line</th>
+                    <th>Budget Code</th>
+                    <th>Description</th>
+                    <th>Quantity</th>
+                    <th>Unit</th>
+                    <th>Total Cost</th>
+                    <th>Scheduled</th>
+                    <th>Apex Contract Value</th>
+                    <th>Profit</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="text" value="001" placeholder="Prime line"></td>
+                    <td><input type="text" value="BC001" placeholder="Budget code"></td>
+                    <td><textarea placeholder="Description">Test description</textarea></td>
+                    <td><input type="number" value="1" placeholder="0"></td>
+                    <td><input type="number" value="100" placeholder="0.00"></td>
+                    <td><input type="number" value="100" placeholder="0.00"></td>
+                    <td><input type="number" value="100" placeholder="0.00"></td>
+                    <td><input type="number" value="100" placeholder="0.00"></td>
+                    <td><input type="number" value="0" placeholder="0.00"></td>
+                    <td><button type="button" class="btn-icon btn-danger" title="Remove">&times;</button></td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="button" onclick="addTestRow()">Add Test Row</button>
+    </div>
+    
+    <script>
+        function addTestRow() {
+            const tbody = document.querySelector('#scheduleTable tbody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><input type="text" value="002" placeholder="Prime line"></td>
+                <td><input type="text" value="BC002" placeholder="Budget code"></td>
+                <td><textarea placeholder="Description">Another test</textarea></td>
+                <td><input type="number" value="2" placeholder="0"></td>
+                <td><input type="number" value="200" placeholder="0.00"></td>
+                <td><input type="number" value="400" placeholder="0.00"></td>
+                <td><input type="number" value="400" placeholder="0.00"></td>
+                <td><input type="number" value="400" placeholder="0.00"></td>
+                <td><input type="number" value="0" placeholder="0.00"></td>
+                <td><button type="button" class="btn-icon btn-danger" title="Remove">&times;</button></td>
+            `;
+            tbody.appendChild(row);
+        }
+    </script>
+</body>
+</html>

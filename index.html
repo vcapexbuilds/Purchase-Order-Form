@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apex PO System - Login</title>
+    <link rel="stylesheet" href="css/global.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-form">
+            <div class="logo">
+                <h1>APEX PO SYSTEM</h1>
+            </div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="role">Login As</label>
+                    <select id="role" name="role" required>
+                        <option value="user" selected>User</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="login-btn">Login</button>
+            </form>
+            
+            <div class="register-link">
+                <p>Don't have an account? <a href="#" id="registerLink">Register here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Register New User</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="regUsername">Username</label>
+                    <input type="text" id="regUsername" name="username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="regEmail">Email</label>
+                    <input type="email" id="regEmail" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="regPassword">Password</label>
+                    <input type="password" id="regPassword" name="password" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="regCompany">Company Name</label>
+                    <input type="text" id="regCompany" name="company" required>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="cancelRegister">Cancel</button>
+                    <button type="submit" class="btn-primary">Register</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success/Error Modal -->
+    <div id="messageModal" class="modal">
+        <div class="modal-content">
+            <h3 id="messageTitle">Message</h3>
+            <p id="messageText">Message content</p>
+            <div class="modal-actions">
+                <button type="button" class="btn-primary" id="messageOk">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/core/storage.js"></script>
+    <script src="js/core/auth.js"></script>
+    <script src="js/core/api.js"></script>
+    <script src="js/Module/modal.js"></script>
+    <script src="js/pages/login.js"></script>
+</body>
+</html>

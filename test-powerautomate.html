@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Power Automate Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        button { padding: 10px 20px; margin: 10px; background: #007cba; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #005a8c; }
+        #log { background: #f5f5f5; padding: 20px; border: 1px solid #ddd; border-radius: 5px; margin: 20px 0; white-space: pre-wrap; font-family: monospace; max-height: 500px; overflow-y: auto; }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Power Automate Connection Test</h1>
+        <p>Use this page to test your Power Automate connection and debug issues.</p>
+        
+        <button onclick="testConnection()">Test Power Automate Connection</button>
+        <button onclick="sendSamplePO()">Send Sample PO Data</button>
+        <button onclick="sendMinimalPO()">Send Minimal PO (Debug 400 Error)</button>
+        <button onclick="clearLog()">Clear Log</button>
+        
+        <div id="log"></div>
+    </div>
+
+    <script>
+        const POWER_AUTOMATE_URL = 'https://defaulta543e2f6ae4b4d1db263a38786ce68.44.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/146de521bc3a415d9dbbdfec5476be38/triggers/manual/paths/invoke/?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=_bSEuYWnBRzJs_p7EvROZXVi6KLitzuyOtIlD7lEqLA';
+
+        function log(message, type = 'info') {
+            const logElement = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : 'info';
+            logElement.innerHTML += `<span class="${className}">[${timestamp}] ${message}</span>\n`;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+
+        async function testConnection() {
+            log('🧪 Testing Power Automate connection...');
+            log('📡 URL: ' + POWER_AUTOMATE_URL);
+
+            try {
+                const response = await fetch(POWER_AUTOMATE_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ test: true, timestamp: new Date().toISOString() })
+                });
+
+                log(`📡 Response Status: ${response.status} ${response.statusText}`);
+                log(`📡 Response OK: ${response.ok}`);
+                
+                const responseHeaders = {};
+                response.headers.forEach((value, key) => {
+                    responseHeaders[key] = value;
+                });
+                log(`📡 Response Headers: ${JSON.stringify(responseHeaders, null, 2)}`);
+
+                let responseText;
+                try {
+                    responseText = await response.text();
+                    log(`📄 Response Body: ${responseText}`);
+                } catch (e) {
+                    log(`❌ Could not read response body: ${e.message}`, 'error');
+                }
+
+                if (response.ok) {
+                    log('✅ Connection successful!', 'success');
+                } else {
+                    log(`❌ Connection failed with HTTP ${response.status}`, 'error');
+                }
+
+            } catch (error) {
+                log(`❌ Network error: ${error.message}`, 'error');
+                log(`❌ Error details: ${JSON.stringify({ name: error.name, stack: error.stack }, null, 2)}`, 'error');
+                
+                if (error.message.includes('CORS')) {
+                    log('🔍 This appears to be a CORS (Cross-Origin) error. This is common when testing from localhost.', 'error');
+                }
+                if (error.message.includes('Failed to fetch')) {
+                    log('🔍 This could be a network connectivity issue or the URL might be incorrect.', 'error');
+                }
+            }
+        }
+
+        async function sendSamplePO() {
+            log('📤 Sending sample PO data to Power Automate...');
+            
+            const samplePO = {
+                meta: {
+                    projectName: "Test Project " + new Date().getTime(),
+                    generalContractor: "Test Contractor",
+                    address: "123 Test Street",
+                    owner: "Test Owner",
+                    apexOwner: "Test Apex Owner",
+                    typeStatus: "New",
+                    projectManager: "Test PM",
+                    contractAmount: 50000,
+                    addAltAmount: 5000,
+                    addAltDetails: "Test additional work",
+                    retainagePct: 10,
+                    requestedBy: "Test User",
+                    companyName: "Test Company",
+                    contactName: "Test Contact",
+                    cellNumber: "555-1234",
+                    email: "test@example.com",
+                    officeNumber: "555-5678",
+                    vendorType: "Subcontractor",
+                    workType: "Construction",
+                    importantDates: {
+                        noticeToProceed: "2025-01-01",
+                        anticipatedStart: "2025-01-15",
+                        substantialCompletion: "2025-06-01",
+                        hundredPercent: "2025-06-15"
+                    }
+                },
+                schedule: [
+                    {
+                        primeLine: "001",
+                        budgetCode: "BC001",
+                        description: "Test work item",
+                        qty: 1,
+                        unit: 100,
+                        totalCost: 100,
+                        scheduled: 100,
+                        apexContractValue: 100,
+                        profit: 0
+                    }
+                ],
+                scope: [
+                    {
+                        item: "Test scope item",
+                        description: "Test scope description",
+                        included: true,
+                        excluded: false
+                    }
+                ],
+                createdAt: new Date().toISOString(),
+                sent: true,
+                timestamp: Math.floor(Date.now()),
+                id: Math.floor(Date.now() / 1000),
+                sentAt: new Date().toISOString()
+            };
+
+            log('📋 Sample PO data: ' + JSON.stringify(samplePO, null, 2));
+
+            try {
+                const response = await fetch(POWER_AUTOMATE_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(samplePO)
+                });
+
+                log(`📡 Response Status: ${response.status} ${response.statusText}`);
+                
+                const responseText = await response.text();
+                log(`📄 Response Body: ${responseText}`);
+
+                if (response.ok) {
+                    log('✅ Sample PO sent successfully!', 'success');
+                } else {
+                    log(`❌ Failed to send PO with HTTP ${response.status}`, 'error');
+                    
+                    // Analyze common 400 errors
+                    if (response.status === 400) {
+                        log('🔍 HTTP 400 Bad Request Analysis:', 'error');
+                        log('- Check if all required fields are present', 'error');
+                        log('- Verify data types match Power Automate schema', 'error');
+                        log('- Ensure dates are in correct ISO format', 'error');
+                        log('- Check for missing or null values in required fields', 'error');
+                        
+                        if (responseText.includes('schema')) {
+                            log('- This appears to be a schema validation error', 'error');
+                        }
+                        if (responseText.includes('required')) {
+                            log('- This indicates missing required fields', 'error');
+                        }
+                    }
+                }
+
+            } catch (error) {
+                log(`❌ Error sending PO: ${error.message}`, 'error');
+            }
+        }
+
+        async function sendMinimalPO() {
+            log('📤 Sending minimal PO data to isolate 400 error...');
+            
+            // Start with absolute minimal data
+            const minimalPO = {
+                meta: {
+                    projectName: "Minimal Test",
+                    generalContractor: "Test",
+                    address: "Test Address",
+                    owner: "Test Owner",
+                    apexOwner: "Test",
+                    typeStatus: "New",
+                    projectManager: "Test PM",
+                    contractAmount: 1000,
+                    addAltAmount: 0,
+                    addAltDetails: "",
+                    retainagePct: 0,
+                    requestedBy: "Test",
+                    companyName: "Test Co",
+                    contactName: "Test Contact",
+                    cellNumber: "123-456-7890",
+                    email: "test@test.com",
+                    officeNumber: "123-456-7890",
+                    vendorType: "Test",
+                    workType: "Test",
+                    importantDates: {
+                        noticeToProceed: "",
+                        anticipatedStart: "",
+                        substantialCompletion: "",
+                        hundredPercent: ""
+                    }
+                },
+                schedule: [],
+                scope: [],
+                createdAt: new Date().toISOString(),
+                sent: true,
+                timestamp: Math.floor(Date.now()),
+                id: Math.floor(Date.now() / 1000),
+                sentAt: new Date().toISOString()
+            };
+
+            log('📋 Minimal PO data: ' + JSON.stringify(minimalPO, null, 2));
+
+            try {
+                const response = await fetch(POWER_AUTOMATE_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(minimalPO)
+                });
+
+                log(`📡 Response Status: ${response.status} ${response.statusText}`);
+                
+                const responseText = await response.text();
+                log(`📄 Response Body: ${responseText}`);
+
+                if (response.ok) {
+                    log('✅ Minimal PO sent successfully! The issue might be with complex data.', 'success');
+                } else if (response.status === 400) {
+                    log(`❌ Still getting 400 error with minimal data`, 'error');
+                    log('🔍 This suggests the Power Automate flow schema expects different field names or structure', 'error');
+                    log('💡 Try checking your Power Automate flow\'s HTTP trigger schema requirements', 'error');
+                } else {
+                    log(`❌ Different error with minimal data: HTTP ${response.status}`, 'error');
+                }
+
+            } catch (error) {
+                log(`❌ Error sending minimal PO: ${error.message}`, 'error');
+            }
+        }
+
+        // Test connection on page load
+        window.addEventListener('load', () => {
+            log('🚀 Power Automate Test Page Ready');
+            log('💡 Click "Test Power Automate Connection" to check if your endpoint is reachable');
+        });
+    </script>
+</body>
+</html>
