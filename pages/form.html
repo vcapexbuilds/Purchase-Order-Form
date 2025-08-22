@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Order Form - Apex PO System</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/form.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">Purchase Order Form</div>
+        <div class="nav-menu">
+            <button id="backBtn" class="btn btn-secondary" onclick="testBackButton()">Back to Dashboard</button>
+            <button id="logoutBtn" class="btn btn-secondary" onclick="handleLogout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <form id="poForm">
+            <!-- Meta Information Section -->
+            <div class="form-section">
+                <h2>Project Information</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="projectName">Project Name *</label>
+                        <input type="text" id="projectName" name="projectName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="generalContractor">General Contractor *</label>
+                        <input type="text" id="generalContractor" name="generalContractor" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="address">Address *</label>
+                        <input type="text" id="address" name="address" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="owner">Owner *</label>
+                        <input type="text" id="owner" name="owner" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="apexOwner">Apex Owner *</label>
+                        <select id="apexOwner" name="apexOwner" required>
+                            <option value="">Select</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="typeStatus">Type Status *</label>
+                        <select id="typeStatus" name="typeStatus" required>
+                            <option value="">Select Status</option>
+                            <option value="PreConstruction">Pre-Construction</option>
+                            <option value="Construction">Construction</option>
+                            <option value="PostConstruction">Post-Construction</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="projectManager">Project Manager *</label>
+                        <input type="text" id="projectManager" name="projectManager" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contractAmount">Contract Amount *</label>
+                        <input type="number" id="contractAmount" name="contractAmount" step="0.01" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="addAltAmount">Add/Alt Amount</label>
+                        <input type="number" id="addAltAmount" name="addAltAmount" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="retainagePct">Retainage %</label>
+                        <input type="number" id="retainagePct" name="retainagePct" min="0" max="100" step="0.01">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="addAltDetails">Add/Alt Details</label>
+                    <textarea id="addAltDetails" name="addAltDetails" rows="3"></textarea>
+                </div>
+            </div>            <!-- Contact Information Section -->
+            <div class="form-section">
+                <h2>Contact Information</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="requestedBy">Requested By *</label>
+                        <input type="text" id="requestedBy" name="requestedBy" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="companyName">Company Name *</label>
+                        <input type="text" id="companyName" name="companyName" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="contactName">Contact Name *</label>
+                        <input type="text" id="contactName" name="contactName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="cellNumber">Cell Number *</label>
+                        <input type="tel" id="cellNumber" name="cellNumber" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="officeNumber">Office Number</label>
+                        <input type="tel" id="officeNumber" name="officeNumber">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="vendorType">Vendor Type *</label>
+                        <select id="vendorType" name="vendorType" required>
+                            <option value="">Select Type</option>
+                            <option value="Sub Contractor">Sub Contractor</option>
+                            <option value="Supplier">Supplier</option>
+                            <option value="Consultant">Consultant</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="workType">Work Type *</label>
+                        <select id="workType" name="workType" required>
+                            <option value="">Select Work Type</option>
+                            <option value="General Requirements">General Requirements</option>
+                            <option value="Existing Conditions">Existing Conditions</option>
+                            <option value="Concrete">Concrete</option>
+                            <option value="Masonry">Masonry</option>
+                            <option value="Metals">Metals</option>
+                            <option value="Wood, Plastics, and Composites">Wood, Plastics, and Composites</option>
+                            <option value="Thermal & Moisture Protection">Thermal & Moisture Protection</option>
+                            <option value="Openings">Openings</option>
+                            <option value="Finishes">Finishes</option>
+                            <option value="Specialties">Specialties</option>
+                            <option value="Equipment">Equipment</option>
+                            <option value="Furnishings">Furnishings</option>
+                            <option value="Special Construction">Special Construction</option>
+                            <option value="Conveying Equipment">Conveying Equipment</option>
+                            <option value="Fire Suppression">Fire Suppression</option>
+                            <option value="Plumbing">Plumbing</option>
+                            <option value="HVAC">HVAC</option>
+                            <option value="Electrical">Electrical</option>
+                            <option value="Communications">Communications</option>
+                            <option value="Electronic Safety and Security">Electronic Safety and Security</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Important Dates Section -->
+            <div class="form-section">
+                <h2>Important Dates</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="noticeToProceed">Notice to Proceed</label>
+                        <input type="date" id="noticeToProceed" name="noticeToProceed">
+                    </div>
+                    <div class="form-group">
+                        <label for="anticipatedStart">Anticipated Start</label>
+                        <input type="date" id="anticipatedStart" name="anticipatedStart">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="substantialCompletion">Substantial Completion</label>
+                        <input type="date" id="substantialCompletion" name="substantialCompletion">
+                    </div>
+                    <div class="form-group">
+                        <label for="hundredPercent">100% Completion</label>
+                        <input type="date" id="hundredPercent" name="hundredPercent">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schedule Section -->
+            <div class="form-section">
+                <h2>Schedule</h2>
+                <div class="table-controls">
+                    <button type="button" id="addScheduleItem" class="btn-secondary">Add Schedule Item</button>
+                </div>
+                <table id="scheduleTable" class="form-table">
+                    <thead>
+                        <tr>
+                            <th>Prime Line *</th>
+                            <th>Budget Code *</th>
+                            <th>Description *</th>
+                            <th>Quantity *</th>
+                            <th>Unit *</th>
+                            <th>Total Cost *</th>
+                            <th>Scheduled *</th>
+                            <th>Apex Contract Value *</th>
+                            <th>Profit *</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scheduleItems">
+                        <!-- Dynamic schedule items will be added here -->
+                    </tbody>
+                </table>
+                <div id="noScheduleItems" class="empty-state">
+                    <p>No schedule items added yet. Click "Add Schedule Item" to begin.</p>
+                </div>
+            </div>
+
+            <!-- Scope Section -->
+            <div class="form-section">
+                <h2>Scope of Work</h2>
+                <div class="table-controls">
+                    <button type="button" id="addScopeItem" class="btn-secondary">Add Scope Item</button>
+                </div>
+                <table id="scopeTable" class="form-table">
+                    <thead>
+                        <tr>
+                            <th>Item Number *</th>
+                            <th>Description *</th>
+                            <th>Status *</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scopeItems">
+                        <!-- Dynamic scope items will be added here -->
+                    </tbody>
+                </table>
+                <div id="noScopeItems" class="empty-state">
+                    <p>No scope items added yet. Click "Add Scope Item" to begin.</p>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-actions">
+                <button type="button" id="clearForm" class="btn-secondary">Clear Form</button>
+                <button type="submit" class="btn-primary">Submit Purchase Order</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content success">
+            <h3>✅ Success!</h3>
+            <p id="successMessage">Purchase Order submitted successfully!</p>
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" id="viewPOs">View My POs</button>
+                <button type="button" class="btn-primary" id="createNew">Create New PO</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div id="errorModal" class="modal">
+        <div class="modal-content error">
+            <h3>❌ Error</h3>
+            <p id="errorMessage">An error occurred. Please try again.</p>
+            <div class="modal-actions">
+                <button type="button" class="btn-primary" id="errorOk">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Modal -->
+    <div id="loadingModal" class="modal">
+        <div class="modal-content">
+            <div class="loading-spinner"></div>
+            <p>Submitting Purchase Order...</p>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <h3>Confirm Action</h3>
+            <p id="confirmMessage">Are you sure?</p>
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" id="confirmCancel">Cancel</button>
+                <button type="button" class="btn-danger" id="confirmOk">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/core/storage.js"></script>
+    <script src="../js/core/auth.js"></script>
+    <script src="../js/core/api.js"></script>
+    <script src="../js/Module/modal.js"></script>
+    
+    <!-- Global logout function -->
+    <script>
+        function testBackButton() {
+            console.log('testBackButton called!');
+            
+            // Check if we can use the modal
+            if (typeof window.showConfirmModal === 'function') {
+                window.showConfirmModal(
+                    'Confirm Navigation',
+                    'Are you sure you want to leave? Any unsaved changes will be lost.',
+                    function() {
+                        // Navigate to appropriate dashboard based on user role
+                        if (window.auth && window.auth.isAuthenticated()) {
+                            const currentUser = window.auth.getCurrentUser();
+                            if (currentUser && currentUser.role === 'admin') {
+                                window.location.href = '../pages/admin.html';
+                            } else {
+                                window.location.href = '../pages/tracking.html';
+                            }
+                        } else {
+                            // If not authenticated, redirect to login
+                            window.location.href = '../index.html';
+                        }
+                    },
+                    null
+                );
+            } else {
+                console.log('Modal not available, using basic confirm');
+                if (confirm('Are you sure you want to leave? Any unsaved changes will be lost.')) {
+                    // Navigate to appropriate dashboard based on user role
+                    if (window.auth && window.auth.isAuthenticated()) {
+                        const currentUser = window.auth.getCurrentUser();
+                        if (currentUser && currentUser.role === 'admin') {
+                            window.location.href = '../pages/admin.html';
+                        } else {
+                            window.location.href = '../pages/tracking.html';
+                        }
+                    } else {
+                        // If not authenticated, redirect to login
+                        window.location.href = '../index.html';
+                    }
+                }
+            }
+        }
+        
+        function handleLogout() {
+            console.log('handleLogout called');
+            console.log('window.auth:', window.auth);
+            console.log('window.showConfirmModal:', window.showConfirmModal);
+            
+            if (typeof window.showConfirmModal === 'function') {
+                window.showConfirmModal(
+                    'Confirm Logout',
+                    'Are you sure you want to logout? Any unsaved changes will be lost.',
+                    function() {
+                        console.log('Logout confirmed');
+                        if (window.auth && typeof window.auth.logout === 'function') {
+                            window.auth.logout();
+                        } else {
+                            console.error('Auth.logout not available, trying direct redirect');
+                            localStorage.clear();
+                            sessionStorage.clear();
+                            window.location.href = '../index.html';
+                        }
+                    },
+                    null
+                );
+            } else {
+                console.log('showConfirmModal not available, using basic confirm');
+                if (confirm('Are you sure you want to logout? Any unsaved changes will be lost.')) {
+                    if (window.auth && typeof window.auth.logout === 'function') {
+                        window.auth.logout();
+                    } else {
+                        console.log('Auth not available, doing manual logout');
+                        localStorage.clear();
+                        sessionStorage.clear();
+                        window.location.href = '../index.html';
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <script type="module" src="../js/Module/dynamic-form.js"></script>
+    <script type="module" src="../js/pages/form.js"></script>
+</body>
+</html>

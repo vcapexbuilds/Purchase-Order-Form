@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Purchase Orders - Apex PO System</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/tracking.css">
+</head>
+<body>
+    <div class="header">
+        <h1>My Purchase Orders</h1>
+        <div class="user-info">
+            <span id="welcomeUser">Welcome, User</span>
+            <a href="../pages/form.html" class="nav-link">New PO</a>
+            <button id="logoutBtn" class="logout-btn" onclick="if(confirm('Are you sure you want to logout?')) { auth.logout(); }">Logout</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Filter Section -->
+        <div class="filters">
+            <div class="filter-group">
+                <label for="statusFilter">Status:</label>
+                <select id="statusFilter">
+                    <option value="">All</option>
+                    <option value="Draft">Draft</option>
+                    <option value="Submitted">Submitted</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Rejected">Rejected</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="dateFilter">Date Range:</label>
+                <input type="date" id="dateFrom" placeholder="From">
+                <input type="date" id="dateTo" placeholder="To">
+            </div>
+            
+            <div class="filter-group">
+                <label for="projectFilter">Project:</label>
+                <input type="text" id="projectFilter" placeholder="Search by project name">
+            </div>
+            
+            <button id="applyFilters" class="btn-primary">Apply Filters</button>
+            <button id="clearFilters" class="btn-secondary">Clear</button>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3 id="totalPOs">0</h3>
+                <p>Total POs</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="submittedPOs">0</h3>
+                <p>Submitted</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="approvedPOs">0</h3>
+                <p>Approved</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="totalValue">$0</h3>
+                <p>Total Value</p>
+            </div>
+        </div>
+
+        <!-- PO List -->
+        <div class="po-list">
+            <div class="list-header">
+                <h2>Purchase Orders</h2>
+                <div class="list-actions">
+                    <button id="refreshList" class="btn-secondary">🔄 Refresh</button>
+                    <button id="exportList" class="btn-secondary">📥 Export</button>
+                </div>
+            </div>
+
+            <div id="loadingSpinner" class="loading-state">
+                <div class="spinner"></div>
+                <p>Loading purchase orders...</p>
+            </div>
+
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <p>No purchase orders found.</p>
+                <a href="../pages/form.html" class="btn-primary">Create Your First PO</a>
+            </div>
+
+            <div id="poTable" class="table-container" style="display: none;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Project Name</th>
+                            <th>Company</th>
+                            <th>Contract Amount</th>
+                            <th>Status</th>
+                            <th>Created Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="poTableBody">
+                        <!-- Dynamic content -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination" id="pagination" style="display: none;">
+                <button id="prevPage" class="btn-secondary">Previous</button>
+                <span id="pageInfo">Page 1 of 1</span>
+                <button id="nextPage" class="btn-secondary">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PO Details Modal -->
+    <div id="poDetailsModal" class="modal large">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="poDetailsTitle">Purchase Order Details</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body" id="poDetailsBody">
+                <!-- Dynamic content -->
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" id="editPO">Edit PO</button>
+                <button type="button" class="btn-danger" id="deletePO">Delete PO</button>
+                <button type="button" class="btn-primary" id="closePODetails">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <h3>Confirm Action</h3>
+            <p id="confirmMessage">Are you sure?</p>
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" id="confirmCancel">Cancel</button>
+                <button type="button" class="btn-danger" id="confirmOk">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success/Error Modal -->
+    <div id="messageModal" class="modal">
+        <div class="modal-content">
+            <h3 id="messageTitle">Message</h3>
+            <p id="messageText">Message content</p>
+            <div class="modal-actions">
+                <button type="button" class="btn-primary" id="messageOk">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/core/storage.js"></script>
+    <script src="../js/core/auth.js"></script>
+    <script src="../js/core/api.js"></script>
+    <script src="../js/modules/modal.js"></script>
+    <script src="../js/pages/tracking.js"></script>
+</body>
+</html>

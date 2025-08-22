@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Apex PO System</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/tracking.css">
+</head>
+<body>
+    <div class="header">
+        <h1>Admin Panel - All Purchase Orders</h1>
+        <div class="user-info">
+            <span id="welcomeAdmin">Welcome, Admin</span>
+            <button id="logoutBtn" class="logout-btn" onclick="if(confirm('Are you sure you want to logout?')) { auth.logout(); }">Logout</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Admin Dashboard Stats -->
+        <div class="admin-stats">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3 id="totalUsers">0</h3>
+                    <p>Total Users</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="totalPOs">0</h3>
+                    <p>Total POs</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="pendingPOs">0</h3>
+                    <p>Pending Review</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="totalValue">$0</h3>
+                    <p>Total Contract Value</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tab-container">
+            <div class="tabs">
+                <button class="tab-button active" data-tab="pos">Purchase Orders</button>
+                <button class="tab-button" data-tab="users">User Management</button>
+                <button class="tab-button" data-tab="reports">Reports</button>
+            </div>
+
+            <!-- Purchase Orders Tab -->
+            <div id="posTab" class="tab-content active">
+                <!-- Advanced Filters -->
+                <div class="filters admin-filters">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label for="userFilter">User:</label>
+                            <select id="userFilter">
+                                <option value="">All Users</option>
+                                <!-- Dynamic options -->
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="statusFilter">Status:</label>
+                            <select id="statusFilter">
+                                <option value="">All Statuses</option>
+                                <option value="Draft">Draft</option>
+                                <option value="Submitted">Submitted</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Rejected">Rejected</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="contractorFilter">Contractor:</label>
+                            <input type="text" id="contractorFilter" placeholder="Search contractor">
+                        </div>
+                    </div>
+                    
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label for="dateFilter">Date Range:</label>
+                            <input type="date" id="dateFrom">
+                            <input type="date" id="dateTo">
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="amountRange">Amount Range:</label>
+                            <input type="number" id="minAmount" placeholder="Min">
+                            <input type="number" id="maxAmount" placeholder="Max">
+                        </div>
+                    </div>
+                    
+                    <div class="filter-actions">
+                        <button id="applyFilters" class="btn-primary">Apply Filters</button>
+                        <button id="clearFilters" class="btn-secondary">Clear</button>
+                        <button id="exportAll" class="btn-secondary">Export All</button>
+                    </div>
+                </div>
+
+                <!-- PO List -->
+                <div class="po-list">
+                    <div class="list-header">
+                        <h3>All Purchase Orders</h3>
+                        <div class="list-actions">
+                            <button id="refreshList" class="btn-secondary">🔄 Refresh</button>
+                            <button id="bulkActions" class="btn-secondary">Bulk Actions</button>
+                        </div>
+                    </div>
+
+                    <div id="loadingSpinner" class="loading-state">
+                        <div class="spinner"></div>
+                        <p>Loading purchase orders...</p>
+                    </div>
+
+                    <div id="poTable" class="table-container" style="display: none;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="selectAll"></th>
+                                    <th>ID</th>
+                                    <th>User</th>
+                                    <th>Project Name</th>
+                                    <th>Company</th>
+                                    <th>Contract Amount</th>
+                                    <th>Status</th>
+                                    <th>Created Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="poTableBody">
+                                <!-- Dynamic content -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="pagination" id="pagination" style="display: none;">
+                        <button id="prevPage" class="btn-secondary">Previous</button>
+                        <span id="pageInfo">Page 1 of 1</span>
+                        <button id="nextPage" class="btn-secondary">Next</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Management Tab -->
+            <div id="usersTab" class="tab-content">
+                <div class="user-management">
+                    <div class="list-header">
+                        <h3>User Management</h3>
+                        <button id="addUser" class="btn-primary">Add New User</button>
+                    </div>
+
+                    <div id="userTable" class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Company</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Created Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userTableBody">
+                                <!-- Dynamic content -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Tab -->
+            <div id="reportsTab" class="tab-content">
+                <div class="reports-section">
+                    <h3>System Reports</h3>
+                    
+                    <div class="report-cards">
+                        <div class="report-card">
+                            <h4>Monthly PO Summary</h4>
+                            <p>Generate monthly purchase order summary report</p>
+                            <button class="btn-primary" data-report="monthly">Generate Report</button>
+                        </div>
+                        
+                        <div class="report-card">
+                            <h4>User Activity Report</h4>
+                            <p>View user activity and PO submission patterns</p>
+                            <button class="btn-primary" data-report="activity">Generate Report</button>
+                        </div>
+                        
+                        <div class="report-card">
+                            <h4>Financial Summary</h4>
+                            <p>Total contract values and financial overview</p>
+                            <button class="btn-primary" data-report="financial">Generate Report</button>
+                        </div>
+                        
+                        <div class="report-card">
+                            <h4>Export All Data</h4>
+                            <p>Export all purchase orders and user data</p>
+                            <button class="btn-primary" data-report="export">Export Data</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PO Details Modal -->
+    <div id="poDetailsModal" class="modal large">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="poDetailsTitle">Purchase Order Details</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body" id="poDetailsBody">
+                <!-- Dynamic content -->
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-success" id="approvePO">Approve</button>
+                <button type="button" class="btn-danger" id="rejectPO">Reject</button>
+                <button type="button" class="btn-secondary" id="editPO">Edit</button>
+                <button type="button" class="btn-primary" id="closePODetails">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Form Modal -->
+    <div id="userFormModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="userFormTitle">Add New User</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="userForm">
+                    <div class="form-group">
+                        <label for="userUsername">Username *</label>
+                        <input type="text" id="userUsername" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userEmail">Email *</label>
+                        <input type="email" id="userEmail" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userPassword">Password *</label>
+                        <input type="password" id="userPassword" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userCompany">Company *</label>
+                        <input type="text" id="userCompany" name="company" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userRole">Role *</label>
+                        <select id="userRole" name="role" required>
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="userStatus">Status *</label>
+                        <select id="userStatus" name="status" required>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" id="cancelUserForm">Cancel</button>
+                <button type="button" class="btn-primary" id="saveUser">Save User</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Update Modal -->
+    <div id="statusModal" class="modal">
+        <div class="modal-content">
+            <h3 id="statusTitle">Update Status</h3>
+            <div class="form-group">
+                <label for="newStatus">New Status:</label>
+                <select id="newStatus">
+                    <option value="Draft">Draft</option>
+                    <option value="Submitted">Submitted</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Rejected">Rejected</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="statusComments">Comments:</label>
+                <textarea id="statusComments" rows="3" placeholder="Add comments..."></textarea>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" id="cancelStatus">Cancel</button>
+                <button type="button" class="btn-primary" id="updateStatus">Update Status</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <h3>Confirm Action</h3>
+            <p id="confirmMessage">Are you sure?</p>
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" id="confirmCancel">Cancel</button>
+                <button type="button" class="btn-danger" id="confirmOk">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success/Error Modal -->
+    <div id="messageModal" class="modal">
+        <div class="modal-content">
+            <h3 id="messageTitle">Message</h3>
+            <p id="messageText">Message content</p>
+            <div class="modal-actions">
+                <button type="button" class="btn-primary" id="messageOk">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/core/storage.js"></script>
+    <script src="../js/core/auth.js"></script>
+    <script src="../js/core/api.js"></script>
+    <script src="../js/modules/modal.js"></script>
+    <script src="../js/pages/admin.js"></script>
+</body>
+</html>
